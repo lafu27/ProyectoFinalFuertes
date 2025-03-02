@@ -1,7 +1,7 @@
 import { collection, getDocs, doc, getDoc, addDoc, query, where, updateDoc } from 'firebase/firestore';
 import { db } from './config';
 
-// Productos
+
 export const getProductosFromFirebase = async () => {
   try {
     const productosRef = collection(db, 'productos');
@@ -39,16 +39,16 @@ export const getProductoByIdFromFirebase = async (productoId) => {
   }
 };
 
-// Ordenes
+
 export const createOrder = async (orderData) => {
   try {
-    // Verificar stock antes de crear la orden
+    
     const outOfStockItems = await checkStockAvailability(orderData.items);
     if (outOfStockItems.length > 0) {
       throw new Error(`Productos sin stock suficiente: ${outOfStockItems.join(', ')}`);
     }
 
-    // Crear la orden
+    
     const ordenesRef = collection(db, 'ordenes');
     const orden = {
       ...orderData,
@@ -58,7 +58,7 @@ export const createOrder = async (orderData) => {
     
     const docRef = await addDoc(ordenesRef, orden);
 
-    // Actualizar stock de productos
+    
     await updateProductsStock(orderData.items);
 
     return docRef.id;
@@ -68,7 +68,7 @@ export const createOrder = async (orderData) => {
   }
 };
 
-// Funciones auxiliares
+
 const checkStockAvailability = async (items) => {
   const outOfStockItems = [];
   
